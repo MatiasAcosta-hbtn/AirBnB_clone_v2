@@ -1,35 +1,14 @@
 #!/usr/bin/env bash
-# script that sets up your web servers for the deployment of web_static
+# Sets up a web server for deployment of web_static.
 
 apt-get update
-apt-get install nginx -y
+apt-get install -y nginx
 
-if [ ! -d "/data" ]; then
-	mkdir /data
-fi
-
-if [ ! -d "/data/web_static" ]; then
-	mkdir /data/web_static
-fi
-
-if [ ! -d "/data/web_static/releases" ]; then
-	mkdir /data/web_static/releases
-fi
-
-if [ ! -d "/data/web_static/shared" ]; then
-	mkdir /data/web_static/shared
-fi
-
-if [ ! -d "/data/web_static/releases/test" ]; then
-	mkdir /data/web_static/releases/test
-fi
-
-echo "Testing" > /data/web_static/releases/test/index.html
-
-if [ -e "/data/web_static/current" ]; then
-	rm /data/web_static/current
-fi
+mkdir -p /data/web_static/releases/test/
+mkdir -p /data/web_static/shared/
+echo "Holberton School" > /data/web_static/releases/test/index.html
 ln -sf /data/web_static/releases/test/ /data/web_static/current
+
 chown -R ubuntu /data/
 chgrp -R ubuntu /data/
 new="server_name _;\n\tlocation  \/hbnb_static {\n\t\talias \/data\/web_static\/current;\n\t\tindex index.html;\n\t}"
