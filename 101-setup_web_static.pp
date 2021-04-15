@@ -1,51 +1,48 @@
-# Creating a custom Header HTTP with Puppet
+# Redo the task #0 but by using Puppet
 
-exec { 'update':
-  command => 'sudo apt-get update',
-  path    => ['/usr/bin', '/bin'],
+exec {'apt-get-update':
+  command => '/usr/bin/apt-get update'
+}
+
+package {'apache2.2-common':
+  ensure  => 'absent',
+  require => Exec['apt-get-update']
 }
 
 package { 'nginx':
-  ensure  => installed,
-  require => Exec['update'],
+  ensure  => 'installed',
+  require => Package['apache2.2-common']
 }
 
- $whisper_dirs = [ '/data', '/data/web_static/',
-                    '/data/web_static/releases/', '/data/web_static/releases/test',
-                    '/data/web_static/current/'
-                  ]
-
-file { $whisper_dirs:
-    ensure => 'directory',
-    owner  => 'ubuntu',
-    group  => 'ubuntu',
+service {'nginx':
+  ensure  =>  'running',
+  require => file_line['ADDING A LOCATION']
 }
 
-exec {'Echo echo':
-     command  => 'echo "Fake text" | sudo tee /data/web_static/releases/test/index.html',
-     provider => shell,
+file { ['/data', '/data/web_static', '/data/web_static/shared', '/data/web_static/releases', '/data/web_static/releases/test'] :
+  ensure  => 'directory',
+  owner   => 'ubuntu',
+  group   => 'ubuntu',
+  require =>  Package['nginx']
 }
 
-exec {'Creating SL':
-     command  => 'ln -sf /data/web_static/releases/test/ /data/web_static/current',
-     provider => shell,
-     require  => Exec['Echo echo']
+file { '/data/web_static/releases/test/index.html':
+  ensure  => 'present',
+  content => 'This is my sample content',
+  require =>  Package['nginx']
 }
 
-exec {'Owner change':
-     command  => 'chown -R ubuntu:ubuntu /data/',
-     provider => shell,
-     require  => Exec['Creating SL']
+file { '/data/web_static/current':
+  ensure => 'link',
+  target => '/data/web_static/releases/test',
+  force  => true
 }
 
-exec {'Location thing':
-     command  => 'sed -i "42i\ \n\tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t}\n" /etc/nginx/sites-available/default',
-     provider => shell,
-     require  => Exec['Owner change']
-}
-
-exec {'Nginx Restart':
-     command  => 'service nginx restart',
-     provider => shell,
-     require  => Exec['Location thing']
+file_line { 'ADDING A LOCATION':
+  ensure  => 'present',
+  path    => '/etc/nginx/sites-enabled/default',
+  line    => 'location /hbnb_static/ { alias /data/web_static/current/; autoindex off; } location / { ',
+  match   => '^\s+location+',
+  require => Package['nginx'],
+  notify  => Service['nginx'],
 }
