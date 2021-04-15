@@ -8,7 +8,7 @@ from datetime import datetime
 
 
 def do_pack():
-    """Function convert to tgz the content of web static folder""""
+    """Function convert to tgz the content of web static folder"""
     if not isdir('versions'):
         if local("mkdir versions").failed:
             return None
