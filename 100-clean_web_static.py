@@ -12,6 +12,7 @@ env.hosts = ['34.75.78.32', '34.73.48.61']
 
 def do_clean(number=0):
     """Function to clean trash files"""
+    number = int(number)
     number += 1
     if (number == 1):
         local('cd versions; ls -t | tail -n +2 | xargs rm -rf')
