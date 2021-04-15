@@ -8,7 +8,6 @@ from datetime import datetime
 
 
 env.hosts = ['34.75.78.32', '34.73.48.61']
-env.user = 'ubuntu'
 
 
 def do_deploy(archive_path):
