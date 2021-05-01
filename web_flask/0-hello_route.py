@@ -1,11 +1,14 @@
 #!/usr/bin/python3
 '''Flask Module'''
+
 from flask import Flask
+
+
 app = Flask(__name__)
 
 
 @app.route('/', strict_slashes=False)
-def hello_world():
+def hello_hbnb():
     '''First Flask Function'''
     return 'Hello HBNB!'
 
