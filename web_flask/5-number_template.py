@@ -33,7 +33,7 @@ def hello_python(text="is cool"):
 def hello_num(n):
     '''Fifth Flask Function'''
     try:
-        return "{} is number".format(int(n))
+        return "{} is a number".format(int(n))
     except:
         return abort(404)
 
