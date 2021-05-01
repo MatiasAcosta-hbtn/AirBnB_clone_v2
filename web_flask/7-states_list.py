@@ -16,6 +16,7 @@ def list_states():
     states_list = list(storage.all(State).values())
     return render_template('7-states_list.html', states_list=states_list)
 
+
 @app.teardown_appcontext
 def close_session(self):
     """function that call close method"""
