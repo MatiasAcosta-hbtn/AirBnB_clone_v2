@@ -43,7 +43,7 @@ def num_temp_func(n):
     """Number Page"""
     try:
         number = int(n)
-        return render_template("5-number.html", number=n)
+        return render_template("5-number.html", number=number)
     except:
         abort(404)
 
