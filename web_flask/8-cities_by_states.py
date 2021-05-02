@@ -4,8 +4,6 @@
 
 from flask import Flask, abort, render_template
 from models import storage
-from models.engine.db_storage import DBStorage
-from models.engine.file_storage import FileStorage
 from models.state import State
 
 
